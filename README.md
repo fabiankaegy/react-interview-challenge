@@ -5,6 +5,8 @@ This is a two hour take home coding challenge designed to test the basic princip
 ## Criteria
 Try and tackle as many bullet points as you can before your time is up.
 
+![Design Screenshot](/design_screenshot.png?raw=true")
+
 1. Your card must resemble the design presented in Adobe XD. It does not have to be pixel perfect
 2. Your feed must pull and append 5 new results every 5 seconds
 3. Your feed must be able to filter by three choices from a select menu:
