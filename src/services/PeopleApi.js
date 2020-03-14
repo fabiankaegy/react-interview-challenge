@@ -3,15 +3,15 @@ import axios from 'axios';
 export const PeopleApi = {
     getPeople() {
         return (
-            axios({
+            axios( {
                 method: 'get',
-                url: 'https://randomuser.me/api/?results=5'
+                url: 'https://randomuser.me/api/?results=6'
+            } )
+            .then( response => {
+                return response.data.results;
             })
-            .then((res) => {
-                return res.data.results;
-            })
-            .catch((err) => {
-                return err;
+            .catch( error => {
+                return error;
             })
         );
     }
