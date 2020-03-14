@@ -10,10 +10,16 @@ import './App.css';
 
 export default () => {
 
+	// setup local states
 	const [ people, setPeople ] = useState( [] );
 	const [ filter, setFilter ] = useState( '' );
 	const [ isLoading, setIsLoading ] = useState( false );
 
+	/**
+	 * fetches 6 new people from the API
+	 * 
+	 * @return {Array} array of 6 new people from the API
+	 */
 	const fetchPeople = async () => {
 		try {
 			return await PeopleApi.getPeople();
@@ -22,6 +28,9 @@ export default () => {
 		}
 	};
 
+	/**
+	 * click handler for the Load more button
+	 */
 	const handleLoadMore = async () => {
 		setIsLoading( true );
 		const result = await fetchPeople();
@@ -29,15 +38,21 @@ export default () => {
 		setIsLoading( false );
 	}
 
-	const removePerson = ( id ) => {
+	/**
+	 * Remove Person
+	 * @param {Number} atIndex removes person at the provided index
+	 */
+	const removePerson = ( atIndex ) => {
 
+		// filter wether the provided index matches the index of the person
 		const newPeople = people.filter( (person, key) => {			
-			return ! (key === id);
+			return ! (key === atIndex);
 		});
 
 		setPeople( newPeople );
 	}
 
+	// load the initial 6 people
 	useEffect( () => {
 		( async () => {
 			setIsLoading( true );
@@ -47,27 +62,24 @@ export default () => {
 		} )()
 	}, []);
 
+	/**
+	 * Handler for selecting an item in the Gender Filter
+	 * @param {*} event 
+	 */
 	const handleChange = event => {
 		setFilter( event.target.value );
 	}
 
+	/**
+	 * Checks wether the provided gender matches the current filter
+	 * @param {Object} person 
+	 */
 	const isGender = person => {
+		// return true when no filter is applied
 		if ( ! filter ) {
 			return true;
 		}
 		return person.gender === filter;
-	}
-
-	const renderPeople = () => {
-		if( people && people.length ) {
-			return people
-				.filter( isGender )
-				.map( ( person, key ) => ( 
-					<Card key={ key } { ...person } id={key} removePerson={ removePerson } />
-				) );
-		}
-
-		return null;
 	}
 
 	return (
@@ -80,7 +92,13 @@ export default () => {
 					<option value="female">Female</option>
 			</select>
 			<div className="people-grid">
-				{ renderPeople() }
+				{ people && people.length ? (
+					people
+					.filter( isGender )
+					.map( ( person, key ) => ( 
+						<Card key={ key } { ...person } id={key} removePerson={ removePerson } />
+					) ) 
+				) : null }
 			</div>
 			<button className={ `load-more ${ isLoading ? 'is-busy' : '' }` } onClick={ handleLoadMore }>Load More</button>
 		</div>
