@@ -37,6 +37,7 @@
     background: #fff;
     box-shadow: 0 0 4px rgba(0,0,0, 0.18);
     transition: box-shadow 50ms ease-in-out;
+    position: relative;
 }
 
 .card:hover {
@@ -101,6 +102,24 @@ button:hover,
 .button:hover {
     cursor: pointer;
     background-color: var(--c-primary-hover);
+}
+
+.card .delete {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 1em;
+    right: 1em;
+    padding: 0;
+    margin: 0;
+    background: none;
+    border: none;
+    color: white;
+    display: none;
+}
+
+.card:hover .delete {
+    display: block;
 }
 
 select {

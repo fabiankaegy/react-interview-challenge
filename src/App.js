@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // api
 import { PeopleApi } from './services/PeopleApi.js';
@@ -29,6 +29,15 @@ export default () => {
 		setIsLoading( false );
 	}
 
+	const removePerson = ( id ) => {
+
+		const newPeople = people.filter( (person, key) => {			
+			return ! (key === id);
+		});
+
+		setPeople( newPeople );
+	}
+
 	useEffect( () => {
 		( async () => {
 			setIsLoading( true );
@@ -54,7 +63,7 @@ export default () => {
 			return people
 				.filter( isGender )
 				.map( ( person, key ) => ( 
-					<Card key={ key } { ...person } />
+					<Card key={ key } { ...person } id={key} removePerson={ removePerson } />
 				) );
 		}
 
@@ -80,10 +89,11 @@ export default () => {
 }
 
 const Card = props => {
-	const { picture: { large }, name: { first, last }, gender, email } = props;
+	const { picture: { large }, name: { first, last }, gender, email, id, removePerson } = props;
 
 	return (
 		<div className="card">
+			<button className="delete" onClick={ () => removePerson( id ) } >X</button>
 			<img className="background" src={background} alt="" />
 			<div className="container">
 				<img className="avatar" src={ large } alt="" />
