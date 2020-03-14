@@ -1,71 +1,66 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // api
 import { PeopleApi } from './services/PeopleApi.js';
 
 // style
-import styled from 'styled-components';
 import './App.css';
 
-const SelectContainer = styled.select`
-  width: 160px;
-  height: 30px;
-`
 
-export default class App extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      people: [],
-    }
-  }
+export default props => {
 
-  componentDidMount = () => {
-    this.fetchPeople();
-  }
+	const [ people, setPeople ] = useState( [] );
+	const [ filter, setFilter ] = useState();
 
-  fetchPeople = async () => {
-    try {
-      const res = await PeopleApi.getPeople();
-      this.setState({
-        people: res
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  }
+	useEffect( () => {
+		fetchPeople();
+	}, [])
 
-  handleChange = (val) => {
 
-  }
+	const fetchPeople = async () => {
+		try {
+			const response = await PeopleApi.getPeople();
+			setPeople( response );
+		} catch (error) {
+			console.error(error);
+		}
+	}
 
-  renderPeople = () => {
-    if(this.state.people) {
-      return this.state.people.map((person) => (
-          <div>
-            <img src={person.picture.medium} alt=""/>
-            <div>
-              { `${person.name.first} ${person.name.last}` }
-            </div>
-          </div>
-      ));
-    }
+	const handleChange = (val) => {
+		setFilter( val );
+	}
 
-    return null;
-  }
+	const renderPeople = () => {
+		if( people && people.length ) {
+			return people.map( Card );
+		}
 
-  render = () => {
-    return (
-      <div>
-        <SelectContainer onChange={(val) => this.handleChange(val)}>
-            <option>No Filter</option>
-            <option>Male</option>
-            <option>Female</option>
-        </SelectContainer>
+		return null;
+	}
 
-        { this.renderPeople() }
-      </div>
-    );
-  }
+	return (
+		<div>
+			<select onChange={(val) => handleChange(val)}>
+					<option>No Filter</option>
+					<option>Male</option>
+					<option>Female</option>
+			</select>
 
+			{ renderPeople() }
+		</div>
+	);
+
+}
+
+const Card = props => {
+	const { picture: { medium }, name: { first, last } } = props;
+
+	return (
+		<div>
+			<img src={ medium } alt="" />
+			<div>
+				{ `${ first } ${ last }` }
+			</div>
+		</div>
+	)
 }
