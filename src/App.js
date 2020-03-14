@@ -38,15 +38,24 @@ export default () => {
 		setIsLoading( false );
 	}
 
+	// automatically pull in people every 5 secconds
+
+	// useEffect( () => {
+	// 	setInterval( () => {
+	// 		handleLoadMore()
+	// 	}, 5000 )
+
+	// }, [handleLoadMore] )
+
 	/**
 	 * Remove Person
 	 * @param {Number} atIndex removes person at the provided index
 	 */
-	const removePerson = ( atIndex ) => {
+	const removePerson = ( uuid ) => {
 
 		// filter wether the provided index matches the index of the person
-		const newPeople = people.filter( (person, key) => {			
-			return ! (key === atIndex);
+		const newPeople = people.filter( person => {			
+			return ! (person.login.uuid === uuid);
 		});
 
 		setPeople( newPeople );
@@ -96,7 +105,7 @@ export default () => {
 					people
 					.filter( isGender )
 					.map( ( person, key ) => ( 
-						<Card key={ key } { ...person } id={key} removePerson={ removePerson } />
+						<Card key={ key } { ...person } removePerson={ removePerson } />
 					) ) 
 				) : null }
 			</div>
@@ -107,11 +116,25 @@ export default () => {
 }
 
 const Card = props => {
-	const { picture: { large }, name: { first, last }, gender, email, id, removePerson } = props;
+	const { 
+		picture: { 
+			large
+		}, 
+		name: { 
+			first,
+			last
+		}, 
+		gender, 
+		email, 
+		removePerson,
+		login: {
+			uuid
+		} 
+	} = props;
 
 	return (
 		<div className="card">
-			<button className="delete" onClick={ () => removePerson( id ) } >X</button>
+			<button className="delete" onClick={ () => removePerson( uuid ) } >X</button>
 			<img className="background" src={background} alt="" />
 			<div className="container">
 				<img className="avatar" src={ large } alt="" />
